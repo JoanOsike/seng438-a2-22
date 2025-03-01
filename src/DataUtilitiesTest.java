@@ -135,4 +135,105 @@ public class DataUtilitiesTest extends DataUtilities {
 
         assertArrayEquals("createNumber2DArray() failed. The exception thrown is", expected, DataUtilities.createNumberArray2D(array));
     }
+
+    //Test Cases for CreateNumberArray method
+
+    //test for creating a number array with null data
+    @Test
+    public void testCreateNumberArrayWithNullData() {
+        try {
+            DataUtilities.createNumberArray(null);
+            fail("Expected an Exception to be thrown.");
+        } catch (Exception e) {
+            // Test passes if exception is thrown
+        }
+    }
+
+    //test for creating an empty number array
+    @Test
+    public void testCreateNumberArrayWithEmptyArray() {
+        try {
+            Number[] result = DataUtilities.createNumberArray(new double[0]);
+            assertNotNull(result);
+            assertEquals(0, result.length);
+        } catch (Exception e) {
+            fail("Exception thrown unexpectedly: " + e.getMessage());
+        }
+    }
+
+    //test for creating a number array with all positive numbers
+    @Test
+    public void testCreateNumberArrayWithAllPositiveValues() {
+        try {
+            double[] input = {1.0, 2.5, 3.3};
+            Number[] result = DataUtilities.createNumberArray(input);
+
+            assertNotNull("Result array is null", result);
+            assertEquals(3, result.length);
+            assertNotNull("Result[2] is null", result[2]);
+
+            assertEquals(1.0, result[0].doubleValue(), 0.000000001d);
+            assertEquals(2.5, result[1].doubleValue(), 0.000000001d);
+            assertEquals(3.3, result[2].doubleValue(), 0.000000001d);
+        } catch (Exception e) {
+            fail("Exception thrown unexpectedly: " + e.getMessage());
+        }
+    }
+
+    //test for creating a number array with all negative numbers
+    @Test
+    public void testCreateNumberArrayWithAllNegativeValues() {
+        try {
+            double[] input = {-1.0, -2.5, -3.3};
+            Number[] result = DataUtilities.createNumberArray(input);
+
+            assertNotNull("Result array is null", result);
+            assertEquals(3, result.length);
+            assertNotNull("Result[2] is null", result[2]);
+
+            assertEquals(-1.0, result[0].doubleValue(), 0.000000001d);
+            assertEquals(-2.5, result[1].doubleValue(), 0.000000001d);
+            assertEquals(-3.3, result[2].doubleValue(), 0.000000001d);
+        } catch (Exception e) {
+            fail("Exception thrown unexpectedly: " + e.getMessage());
+        }
+    }
+
+    //test for creating a number array with positive and negative values
+    @Test
+    public void testCreateNumberArrayWithMixedValues() {
+        try {
+            double[] input = {-1.5, 0.0, 2.8};
+            Number[] result = DataUtilities.createNumberArray(input);
+
+            assertNotNull("Result array is null", result);
+            assertEquals(3, result.length);
+            assertNotNull("Result[2] is null", result[2]);
+
+            assertEquals(-1.5, result[0].doubleValue(), 0.000000001d);
+            assertEquals(0.0, result[1].doubleValue(), 0.000000001d);
+            assertEquals(2.8, result[2].doubleValue(), 0.000000001d);
+        } catch (Exception e) {
+            fail("Exception thrown unexpectedly: " + e.getMessage());
+        }
+    }
+
+    //test for creating a number array with all zero values
+    @Test
+    public void testCreateNumberArrayWithZeroValues() {
+        try {
+            double[] input = {0.0, 0.0, 0.0};
+            Number[] result = DataUtilities.createNumberArray(input);
+
+            assertNotNull("Result array is null", result);
+            assertEquals(3, result.length);
+            assertNotNull("Result[2] is null", result[2]);
+
+            assertEquals(0.0, result[0].doubleValue(), 0.000000001d);
+            assertEquals(0.0, result[1].doubleValue(), 0.000000001d);
+            assertEquals(0.0, result[2].doubleValue(), 0.000000001d);
+        } catch (Exception e) {
+            fail("Exception thrown unexpectedly: " + e.getMessage());
+        }
+    }
 }
