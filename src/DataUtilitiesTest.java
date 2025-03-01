@@ -14,7 +14,19 @@ import org.junit.Test;
 public class DataUtilitiesTest extends DataUtilities {
 
 	private Mockery mockingContext;
+	private Mockery mockingContext1;
+	private Mockery mockingContext2;
+	private Mockery mockingContext3;
+	private Mockery mockingContext4;
+
+
+
 	private Values2D values;
+	private Values2D values1;
+	private KeyedValues keyed;
+	private KeyedValues keyed2;
+	private KeyedValues keyed3;
+
     @BeforeClass public static void setUpBeforeClass() throws Exception {
     }
 
@@ -26,36 +38,296 @@ public class DataUtilitiesTest extends DataUtilities {
     	values = mockingContext.mock(Values2D.class);
     	mockingContext.checking(new Expectations() {
         {
-            one(values).getRowCount();
-            will(returnValue(2));
             one(values).getColumnCount();
+            will(returnValue(2));
+            one(values).getRowCount();
+            will(returnValue(3));
+            one(values).getValue(0, 0);
+            will(returnValue(5.5));
+            one(values).getValue(0, 1);
+            will(returnValue(2.5));
+            one(values).getValue(-1, 0);
+            will(returnValue(null));
+            one(values).getValue(3, 0);
+            will(returnValue(null));
+            one(values).getValue(1, 0);
+            will(returnValue(-5.5));
+            one(values).getValue(1, 1);
+            will(returnValue(-2.5));
+            one(values).getValue(2, 0);
+            will(returnValue(0));
+            one(values).getValue(2, 1);
+            will(returnValue(0));
+        }
+    });
+    	mockingContext1 = new Mockery();
+    	
+    	values1 = mockingContext1.mock(Values2D.class);
+    	mockingContext1.checking(new Expectations() {
+        {
+            one(values1).getRowCount();
+            will(returnValue(2));
+            one(values1).getColumnCount();
             will(returnValue(3));
             
-            one(values).getValue(0, 0);
+            one(values1).getValue(0, 0);
             will(returnValue(3));
-            one(values).getValue(0, 1);
+            one(values1).getValue(0, 1);
             will(returnValue(0));
-            one(values).getValue(0, -1);
+            one(values1).getValue(0, -1);
             will(returnValue(null));
-            one(values).getValue(1, -1);
+            one(values1).getValue(1, -1);
             will(returnValue(null));
-            one(values).getValue(0,3);
+            one(values1).getValue(0,3);
             will(returnValue(null));
-            one(values).getValue(1,3);
+            one(values1).getValue(1,3);
             will(returnValue(null));
-            one(values).getValue(0, 2);
+            one(values1).getValue(0, 2);
             will(returnValue(-5.5));
-            one(values).getValue(1, 0);
+            one(values1).getValue(1, 0);
             will(returnValue(5));
-            one(values).getValue(1, 1);
+            one(values1).getValue(1, 1);
             will(returnValue(0));
-            one(values).getValue(1, 2);
+            one(values1).getValue(1, 2);
             will(returnValue(-1));
         }
     });
-    }
+    	
+    	mockingContext2 = new Mockery();
+    	
+    	keyed = mockingContext2.mock(KeyedValues.class);
+    	mockingContext2.checking(new Expectations() {
+        {
+        	allowing(keyed).getItemCount();
+            will(returnValue(3));
+            allowing(keyed).getKey(0);
+            will(returnValue("0"));
+            allowing(keyed).getKey(1);
+            will(returnValue("1"));
+            allowing(keyed).getKey(2);
+            will(returnValue("2"));
+            allowing(keyed).getValue(0);
+            will(returnValue(5));
+            allowing(keyed).getValue(1);
+            will(returnValue(10));
+            allowing(keyed).getValue(2);
+            will(returnValue(5));
+      
+        	
+        }
+    });
+    	
+    	mockingContext3 = new Mockery();
+    	
+    	keyed2 = mockingContext3.mock(KeyedValues.class);
+    	mockingContext3.checking(new Expectations() {
+        {
+        	allowing(keyed2).getItemCount();
+            will(returnValue(3));
+            allowing(keyed2).getKey(0);
+            will(returnValue("0"));
+            allowing(keyed2).getKey(1);
+            will(returnValue("1"));
+            allowing(keyed2).getKey(2);
+            will(returnValue("2"));
+            allowing(keyed2).getValue(0);
+            will(returnValue(-5));
+            allowing(keyed2).getValue(1);
+            will(returnValue(10));
+            allowing(keyed2).getValue(2);
+            will(returnValue(5));
+      
+        	
+        }
+    });
+    	
+    	mockingContext4 = new Mockery();
+    	
+    	keyed3 = mockingContext4.mock(KeyedValues.class);
+    	mockingContext4.checking(new Expectations() {
+        {
+        	allowing(keyed3).getItemCount();
+            will(returnValue(3));
+            allowing(keyed3).getKey(0);
+            will(returnValue("0"));
+            allowing(keyed3).getKey(1);
+            will(returnValue("1"));
+            allowing(keyed3).getKey(2);
+            will(returnValue("2"));
+            allowing(keyed3).getValue(0);
+            will(returnValue(-5));
+            allowing(keyed3).getValue(1);
+            will(returnValue(-10));
+            allowing(keyed3).getValue(2);
+            will(returnValue(-5));
+      
+        	
+        }
+    });
 
-    //Test cases for createNumberArray2D(double[][] data) method
+    }
+    
+    // Testing getCumulativePercentages method
+    @Test
+    public void testGetCumulativePercentagesWithNullData() {
+    	try {
+            DataUtilities.getCumulativePercentages(null);
+            fail("Expected an Exception to be thrown.");
+        } catch (Exception e) {
+            // Test passes, exception was thrown as expected
+        }
+    }
+    
+    @Test
+	 public void testGetCumulativePercentagesForAllPositives() {
+    	double[] percents = {0.25, 0.75, 1.0};
+	        
+	        KeyedValues result = DataUtilities.getCumulativePercentages(keyed);
+	
+	        for (int i = 0; i < percents.length ; i++) {
+	            assertEquals(percents[i], result.getValue(i).doubleValue(), 0.00000001d);
+	        }
+
+	 }
+    
+    @Test
+	 public void testGetCumulativePercentagesForAllNegatives() {
+   	double[] percents = {0.25, 0.75, 1.0};
+	        
+	        KeyedValues result = DataUtilities.getCumulativePercentages(keyed3);
+	
+	        for (int i = 0; i < percents.length ; i++) {
+	            assertEquals(percents[i], result.getValue(i).doubleValue(), 0.00000001d);
+	        }
+
+	 }
+    
+    @Test
+	 public void testGetCumulativePercentagesForTwoPositivesOneNegative() {
+   	double[] percents = {-0.5, 0.5, 1.0};
+	        
+	        KeyedValues result = DataUtilities.getCumulativePercentages(keyed2);
+	
+	        for (int i = 0; i < percents.length ; i++) {
+	            assertEquals(percents[i], result.getValue(i).doubleValue(), 0.00000001d);
+	        }
+
+	 }
+    
+    // Testing CalculateRowTotal method
+    
+    @Test
+	 public void testCalculateRowTotalWithNullData() {
+    	try {
+            DataUtilities.calculateRowTotal(null, 0);
+            fail("Expected an Exception to be thrown.");
+        } catch (Exception e) {
+            // Test passes, exception was thrown as expected
+        }
+    }
+    
+    @Test
+	 public void testCalculateRowTotalWithNegativeIndex() {
+   	try {
+           DataUtilities.calculateRowTotal(values, -1);
+           fail("Expected an Exception to be thrown.");
+       } catch (Exception e) {
+           // Test passes, exception was thrown as expected
+       }
+   }
+
+    @Test
+	 public void testCalculateRowTotalWithOutOfScopeIndex() {
+   	try {
+           DataUtilities.calculateRowTotal(values, 3);
+           fail("Expected an Exception to be thrown.");
+       } catch (Exception e) {
+           // Test passes, exception was thrown as expected
+       }
+   }
+
+	
+	@Test
+	 public void testCalculateRowTotalForTwoPositiveValues() {
+	     // setup
+	     double result = DataUtilities.calculateRowTotal(values, 0);
+	     // verify
+	     assertEquals(8.0, result, .000000001d);
+	 }
+	
+	@Test
+	 public void testCalculateRowTotalForTwoNegativeValues() {
+	     // setup
+	     double result = DataUtilities.calculateRowTotal(values, 1);
+	     // verify
+	     assertEquals(-8.0, result, .000000001d);
+	 }
+	
+	@Test
+	 public void testCalculateRowTotalForTwoZeroValues() {
+	     // setup
+	     double result = DataUtilities.calculateRowTotal(values, 2);
+	     // verify
+	     assertEquals(0.0, result, .000000001d);
+	 }
+	
+	//Test cases for CalculateColumnTotal method
+	
+	// Test for null data
+	    @Test
+	    public void testCalculateColumnTotalWithNullData() {
+	        try {
+	            DataUtilities.calculateColumnTotal(null, 0);
+	            fail("Expected an Exception to be thrown.");
+	        } catch (Exception e) {
+	            // Test passes, exception was thrown as expected
+	        }
+	    }
+
+	    // Test for negative thus invalid index
+	    @Test
+	    public void testCalculateColumnTotalWithNegativeIndex() {
+	        try {
+	            DataUtilities.calculateColumnTotal(values1, -1);
+	            fail("Expected an Exception to be thrown.");
+	        } catch (Exception e) {
+	            // Test passes, exception was thrown as expected
+	        }
+	    }
+
+	    // Test for out-of-scope thus invalid index
+	    @Test
+	    public void testCalculateColumnTotalWithOutOfScopeIndex() {
+	        try {
+	            DataUtilities.calculateColumnTotal(values1, 3);
+	            fail("Expected an Exception to be thrown.");
+	        } catch (Exception e) {
+	            // Test passes, exception was thrown as expected
+	        }
+	    }
+
+	    // Test for two positive values
+	    @Test
+	    public void testCalculateColumnTotalForTwoPositiveValues() {
+	        double result = DataUtilities.calculateColumnTotal(values1, 0);
+	        assertEquals(8.0, result, .000000001d);
+	    }
+
+	    // Test for two negative values
+	    @Test
+	    public void testCalculateColumnTotalForTwoNegativeValues() {
+	        double result = DataUtilities.calculateColumnTotal(values1, 1);
+	        assertEquals(-6.5, result, .000000001d);
+	    }
+
+	    // Test for two zero values
+	    @Test
+	    public void testCalculateColumnTotalForTwoZeroValues() {
+	        double result = DataUtilities.calculateColumnTotal(values1, 1);
+	        assertEquals(0.0, result, .000000001d);
+	    }
+
+	//Test cases for createNumberArray2D(double[][] data) method
     @Test
     //test for creating an invaild 2Darray of nulls
 	public void testCreateNumber2DArrayofNulls() {
@@ -278,61 +550,5 @@ public class DataUtilitiesTest extends DataUtilities {
             fail("Exception thrown unexpectedly: " + e.getMessage());
         }
     }
-	
-//Test cases for CalculateColumnTotal method
-	
-// Test for null data
-    @Test
-    public void testCalculateColumnTotalWithNullData() {
-        try {
-            DataUtilities.calculateColumnTotal(null, 0);
-            fail("Expected an Exception to be thrown.");
-        } catch (Exception e) {
-            // Test passes, exception was thrown as expected
-        }
-    }
 
-    // Test for negative thus invalid index
-    @Test
-    public void testCalculateColumnTotalWithNegativeIndex() {
-        try {
-            DataUtilities.calculateColumnTotal(values, -1);
-            fail("Expected an Exception to be thrown.");
-        } catch (Exception e) {
-            // Test passes, exception was thrown as expected
-        }
-    }
-
-    // Test for out-of-scope thus invalid index
-    @Test
-    public void testCalculateColumnTotalWithOutOfScopeIndex() {
-        try {
-            DataUtilities.calculateColumnTotal(values, 3);
-            fail("Expected an Exception to be thrown.");
-        } catch (Exception e) {
-            // Test passes, exception was thrown as expected
-        }
-    }
-
-    // Test for two positive values
-    @Test
-    public void testCalculateColumnTotalForTwoPositiveValues() {
-        double result = DataUtilities.calculateColumnTotal(values, 0);
-        assertEquals(8.0, result, .000000001d);
-    }
-
-    // Test for two negative values
-    @Test
-    public void testCalculateColumnTotalForTwoNegativeValues() {
-        double result = DataUtilities.calculateColumnTotal(values, 1);
-        assertEquals(-6.5, result, .000000001d);
-    }
-
-    // Test for two zero values
-    @Test
-    public void testCalculateColumnTotalForTwoZeroValues() {
-        double result = DataUtilities.calculateColumnTotal(values, 1);
-        assertEquals(0.0, result, .000000001d);
-    }
 }
-
