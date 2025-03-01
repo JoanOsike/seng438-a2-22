@@ -4,12 +4,15 @@ import static org.junit.Assert.*; import org.jfree.data.Range; import org.junit.
 
 public class RangeTest {
     private Range exampleRange;
+    private Range contains_range;
     @BeforeClass public static void setUpBeforeClass() throws Exception {
     }
 
 
     @Before
     public void setUp() throws Exception { exampleRange = new Range(-1, 1);
+    contains_range = new Range(-5.0, 5.0);					  
+					  
     }
     
 
@@ -60,7 +63,7 @@ public class RangeTest {
     public static void tearDownAfterClass() throws Exception {
     }
 
-	//Tests for UpperBound
+	//Tests for getUpperBound()
 
 	//Declaring and setting up variables
 	private Range finiteRangeUpper;
@@ -97,7 +100,7 @@ public class RangeTest {
     }
 
 
-	//Tests for LowerBound
+	//Tests for getLowerBound()
 
 	//declaring and setting up variables
 	private Range finiteRangeLower;
@@ -132,5 +135,54 @@ public class RangeTest {
 		// Lower bound should be NaN
 		assertTrue(Double.isNaN(nanRangeLower.getLowerBound()));
 	}
+	
+	//Tests for contains()
+	
+	@Test
+       // Test for value within range
+    public void testValueWithinRange() {
+        assertTrue("Value within range should return true", contains_range.contains(0.0));
+    }
+
+    @Test
+    // Test for value at lower bound
+    public void testValueAtLowerBound() {
+        assertTrue("Value at lower bound should return true", contains_range.contains(-5.0));
+    }
+
+    @Test
+    // Test for value at upper bound
+    public void testValueAtUpperBound() {
+        assertTrue("Value at upper bound should return true", contains_range.contains(5.0));
+    }
+
+    @Test
+    // Test for value below range
+    public void testValueBelowRange() {
+        assertFalse("Value below range should return false", contains_range.contains(-5.1));
+    }
+
+    @Test
+    // Test for value above range
+    public void testValueAboveRange() {
+        assertFalse("Value above range should return false", contains_range.contains(5.001));
+    }
+
+    @Test
+    // Test for negative range
+    public void testNegativeRange() {
+        Range negativeRange = new Range(-10.0, -1.0);
+        assertTrue("Value within negative range should return true", negativeRange.contains(-5.0));
+        assertFalse("Value above negative range should return false", negativeRange.contains(0.0));
+    }
+
+    @Test
+    // Test for positive range
+    public void testPositiveRange() {
+        Range zeroRange = new Range(0.0, 10.0);
+        assertTrue("Value at zero boundary should return true", zeroRange.contains(4));
+        assertFalse("Value below zero boundary should return false", zeroRange.contains(-0.0000000001));
+    }
+}
 
 }
